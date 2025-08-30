@@ -1,11 +1,14 @@
 const express = require('express');
 const path = require('path');
+const apiRouter = require('./api');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 const publicDir = path.join(__dirname, 'public');
 app.use(express.static(publicDir));
+app.use(express.json());
+app.use('/api', apiRouter);
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(publicDir, 'index.html'));
