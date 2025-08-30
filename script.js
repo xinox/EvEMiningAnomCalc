@@ -338,28 +338,6 @@ function applyAppState(s){
 }
 function loadAppState(){ try { var raw = localStorage.getItem(STATE_KEY); return raw ? JSON.parse(raw) : null; } catch(e){ return null; } }
 function saveAppState(){ try { localStorage.setItem(STATE_KEY, JSON.stringify(getAppState())); } catch(e){} }
-
-
-function parseQueryState(){
-  try {
-    var params = new URLSearchParams(location.search);
-    var obj = {};
-    ['raw','rate','modules','chars','unit'].forEach(function(k){ if (params.has(k)) obj[k] = params.get(k); });
-    return Object.keys(obj).length ? obj : null;
-  } catch(e){ return null; }
-}
-function buildShareURL(){
-  var s = getAppState();
-  var params = new URLSearchParams();
-  if (s.raw) params.set('raw', s.raw);
-  if (s.rate) params.set('rate', s.rate);
-  if (s.modules) params.set('modules', s.modules);
-  if (s.chars) params.set('chars', s.chars);
-  if (s.unit && s.unit !== 'auto') params.set('unit', s.unit);
-  var qs = params.toString();
-  return location.origin + location.pathname + (qs ? ('?' + qs) : '');
-}
-
 // ——— Theme Toggle ———
 function updateThemeToggleUI(theme) { var btn = document.getElementById('themeToggle'); if (!btn) return; btn.textContent = theme === 'dark' ? '☀️ Hell' : '🌙 Dunkel'; btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false'); }
 function applyTheme(theme) { document.documentElement.setAttribute('data-theme', theme); updateThemeToggleUI(theme); try { localStorage.setItem('m3calc/v1/theme', theme); } catch (e) {} }
@@ -367,25 +345,12 @@ function applyTheme(theme) { document.documentElement.setAttribute('data-theme',
 (function init(){
   var rawEl = document.getElementById('raw');
   var st = loadAppState(); if (st) applyAppState(st);
-  var qs = parseQueryState();
-  if (qs) { applyAppState(qs); try { history.replaceState(null, '', location.pathname); } catch(e){} }
-
   if (rawEl && !rawEl.value.trim()) {
     rawEl.value = 'Clear Griemeer\t116.085\t92.868 m3\t19 km\nClear Griemeer\t122.270\t97.816 m3\t78 km\nClear Griemeer\t125.198\t100.158 m3\t81 km\nClear Griemeer\t143.493\t114.794 m3\t36 km\nClear Griemeer\t153.104\t122.483 m3\t24 km\nFiery Kernite\t70.000\t84.000 m3\t17 km\nGriemeer\t78.204\t62.563 m3\t68 km\nGriemeer\t89.722\t71.777 m3\t66 km\nGriemeer\t97.035\t77.628 m3\t3.528 m\nGriemeer\t97.839\t78.271 m3\t50 km\nGriemeer\t118.601\t94.880 m3\t40 km\nGriemeer\t122.579\t98.063 m3\t31 km\nGriemeer\t139.418\t111.534 m3\t31 km\nGriemeer\t150.732\t120.585 m3\t54 km\nGriemeer\t296.826\t237.460 m3\t34 km\nInky Griemeer\t61.147\t48.917 m3\t62 km\nInky Griemeer\t125.905\t100.724 m3\t7.714 m\nInky Griemeer\t135.446\t108.356 m3\t86 km\nKernite\t66.667\t80.000 m3\t17 km\nKernite\t68.889\t82.666 m3\t21 km\nKernite\t71.111\t85.333 m3\t56 km\nKernite\t73.333\t87.999 m3\t70 km\nLuminous Kernite\t44.800\t53.760 m3\t64 km\nLuminous Kernite\t46.200\t55.440 m3\t28 km\nLuminous Kernite\t49.000\t58.800 m3\t17 km\nOpaque Griemeer\t49.702\t39.761 m3\t25 km\nOpaque Griemeer\t69.300\t55.440 m3\t58 km\nPrismatic Gneiss\t1.515\t7.575 m3\t16 km\nResplendant Kernite\t24.162\t28.994 m3\t45 km\nResplendant Kernite\t34.300\t41.160 m3\t13 km';
   }
    // Events
   var onInput = function(){ calculate(); saveAppState(); };
   document.getElementById('calc').addEventListener('click', onInput);
-  var rb = document.getElementById('reset'); if (rb) rb.addEventListener('click', function(){ resetAll(); saveAppState(); });
-  var sb = document.getElementById('share'); if (sb) sb.addEventListener('click', function(){
-    var url = buildShareURL();
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(url).then(function(){ sb.textContent = 'Link kopiert'; setTimeout(function(){ sb.textContent = 'Link teilen'; }, 2000); }, function(){ window.prompt('Link kopieren:', url); });
-    } else {
-      window.prompt('Link kopieren:', url);
-    }
-  });
-
   document.getElementById('reset').addEventListener('click', function(){ resetAll(); saveAppState(); });
   document.getElementById('raw').addEventListener('input', onInput);
   document.getElementById('rate').addEventListener('input', onInput);
