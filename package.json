@@ -1,0 +1,17 @@
+{
+  "name": "evemininganomcalc",
+  "version": "1.0.0",
+  "description": "EVE Online mining anomaly calculator",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node -e \"console.log('No tests specified')\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
