@@ -185,7 +185,7 @@ function updateCurrencyHeaders(){
 }
 function updateKPIUnitLabels(){
   var label = unitLabelOf(activeUnit);
-  ['kpiUnitSplit','kpiUnitSplitPH'].forEach(function(id){
+  ['kpiUnitSplit','kpiUnitSplitPH','kpiUnitRefined','kpiUnitRefinedPH'].forEach(function(id){
     var el = document.getElementById(id);
     if (el) el.textContent = label;
   });
@@ -253,10 +253,14 @@ function rerenderGroupTable() {
   var kB = document.getElementById('kpiBuyTotal'); if (kB) kB.textContent = totalBuy  > 0 ? fmtISK(totalBuy)  : '–';
   var kS = document.getElementById('kpiSellTotal'); if (kS) kS.textContent = totalSell > 0 ? fmtISK(totalSell) : '–';
   var kP = document.getElementById('kpiSplitTotal'); if (kP) kP.textContent = totalSplit > 0 ? fmtISK(totalSplit) : '–';
+  var kR = document.getElementById('kpiRefinedTotal'); if (kR) kR.textContent = totalSell > 0 ? fmtISK(totalSell) : '–';
   // ISK/h (Ø ISK/m³ × m³/s × 3600)
   var midPH  = (gEffRate > 0 && gTotalVolume > 0 && totalSplit> 0) ? (totalSplit/ gTotalVolume) * gEffRate * 3600 : NaN;
   var kPH = document.getElementById('kpiSplitPerHour');
   if (kPH) kPH.textContent = Number.isFinite(midPH) ? fmtISK(midPH) : '–';
+  var refinedPH = (gEffRate > 0 && gTotalVolume > 0 && totalSell > 0) ? (totalSell / gTotalVolume) * gEffRate * 3600 : NaN;
+  var kRPH = document.getElementById('kpiRefinedPerHour');
+  if (kRPH) kRPH.textContent = Number.isFinite(refinedPH) ? fmtISK(refinedPH) : '–';
 }
 // ——— Zeit ———
 function formatVerbose(totalSeconds) {
