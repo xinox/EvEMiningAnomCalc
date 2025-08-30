@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node -e \"console.log('No tests specified')\""
+    "test": "echo 'No tests specified' && exit 0"
   },
   "keywords": [],
   "author": "",
