@@ -1,0 +1,127 @@
+<!-- File: index.html (restored with Buy/Sell KPIs) -->
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="theme.js"></script>
+  <title>m³-Zeitrechner</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div>
+        <h1>m³-Zeitrechner – nur Werte mit „m3“</h1>
+        <p class="hint">Fügt aus dem Text <strong>nur</strong> die Zahlen direkt vor <code>m3</code> zur Summe hinzu. Förderraten-Berechnung: <em>m³/s × Module × Charaktere</em>.</p>
+      </div>
+      <button id="themeToggle" class="secondary" aria-pressed="false">🌙 Dunkel</button>
+    </header>
+
+    <section class="card">
+      <div class="field">
+        <label for="raw">Roh-Input</label>
+        <textarea id="raw" spellcheck="false"></textarea>
+      </div>
+      <div class="grid" style="margin-top:12px;">
+        <div class="field col-4">
+          <label for="rate">m³ pro Sekunde</label>
+          <input id="rate" type="text" inputmode="decimal" placeholder="z. B. 1.200" />
+        </div>
+        <div class="field col-4">
+          <label for="modules">Anzahl Module</label>
+          <input id="modules" type="text" inputmode="numeric" placeholder="z. B. 2" />
+        </div>
+        <div class="field col-4">
+          <label for="chars">Anzahl Charaktere</label>
+          <input id="chars" type="text" inputmode="numeric" placeholder="z. B. 3" />
+        </div>
+      </div>
+      <div class="actions" style="margin-top:12px;">
+        <button id="calc">Berechnen</button>
+        
+        <label class="unitctl" style="margin-left:auto;">Währung:
+          <select id="unitSelect">
+            <option value="auto">Auto</option>
+            <option value="isk">ISK</option>
+            <option value="mio">Mio ISK</option>
+            <option value="mrd">Mrd ISK</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 style="margin-top:0; font-size:1.1rem;">Ergebnis</h2>
+      <div class="table-wrap">
+        <table id="kpiTable">
+          <thead>
+            <tr><th>Kennzahl</th><th class="num">Wert</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Summe Volumen (m³)</td><td class="num"><span id="sumVol">–</span></td></tr>
+            <tr><td>Effektive Rate (m³/s)</td><td class="num"><span id="effRate">–</span></td></tr>
+            <tr><td>Geschätzte Dauer</td><td class="num"><span id="duration">–</span></td></tr>
+            <tr><td>Jetzt → Fertig um</td><td class="num"><span id="etaCell">–</span></td></tr>
+            <tr><td>Gesamt Split (<span id="kpiUnitSplit">ISK</span>)</td><td class="num"><span id="kpiSplitTotal">–</span></td></tr>
+            <tr><td>ISK pro Stunde Split (<span id="kpiUnitSplitPH">ISK</span>/h)</td><td class="num"><span id="kpiSplitPerHour">–</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top:14px;">
+        <div class="subheading">Gruppierung nach Label (1. Spalte)</div>
+        <div class="table-wrap">
+          <table id="groupByLabelTable">
+            <thead>
+              <tr>
+                <th class="sortable" data-key="label"><span>Label</span><span class="sort-ind"></span></th>
+                <th class="num sortable" data-key="count"><span>Einträge</span><span class="sort-ind"></span></th>
+                <th class="num sortable" data-key="ore"><span>Erzanzahl</span><span class="sort-ind"></span></th>
+                <th class="num sortable" data-key="sum"><span>Summe (m³)</span><span class="sort-ind"></span></th>
+                <th class="num" id="colBuy"><span>Buy (Jita 4-4, ISK)</span></th>
+                <th class="num" id="colSell"><span>Sell (Jita 4-4, ISK)</span></th>
+                <th class="num" id="colSplit"><span>Split (Mittelwert, ISK)</span></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+              <tr>
+                <th>Gesamt</th>
+                <th class="num" id="groupTotalCount">–</th>
+                <th class="num" id="groupTotalOre">–</th>
+                <th class="num" id="groupTotalSum">–</th>
+                <th class="num"><span id="groupTotalBuyValue">–</span></th>
+                <th class="num"><span id="groupTotalSellValue">–</span></th>
+                <th class="num"><span id="groupTotalSplitValue">–</span></th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <details style="margin-top:10px;" hidden>
+        <summary>Gefundene Volumenwerte</summary>
+        <div class="list" id="valuesList">–</div>
+      </details>
+
+      <div hidden>
+        <div class="subheading">Gruppierung nach m³-Wert</div>
+        <div class="table-wrap">
+          <table id="groupByValueTable">
+            <thead>
+              <tr><th>m³-Wert</th><th class="num">Vorkommen</th><th class="num">Gesamt (m³)</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <p class="hint" style="margin-top:8px">Hinweis: Dezimaltrennzeichen wird automatisch erkannt ("," oder "."). Es werden ausschließlich Zahlen direkt vor „m3“ summiert. Dabei gelten Punkte als Tausendertrennzeichen und Komma als Dezimaltrennzeichen.</p>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
